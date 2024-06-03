@@ -79,8 +79,8 @@
   $: modeMenuItems = [
     {
       type: 'button',
-      text: 'text',
-      title: `Switch to text mode (current mode: ${mode})`,
+      text: '文本编辑',
+      title: `切换到文本编辑模式 (当前模式: ${mode})`,
       // check for 'code' mode is here for backward compatibility (deprecated since v0.4.0)
       className:
         'jse-group-button jse-first' +
@@ -89,15 +89,15 @@
     },
     {
       type: 'button',
-      text: 'tree',
-      title: `Switch to tree mode (current mode: ${mode})`,
+      text: '结构编辑',
+      title: `切换到结构编辑模式 (当前模式: ${mode})`,
       className: 'jse-group-button ' + (mode === Mode.tree ? ' jse-selected' : ''),
       onClick: () => onChangeMode(Mode.tree)
     },
     {
       type: 'button',
-      text: 'table',
-      title: `Switch to table mode (current mode: ${mode})`,
+      text: '表格编辑',
+      title: `切换到表格编辑模式 (当前模式: ${mode})`,
       className: 'jse-group-button jse-last' + (mode === Mode.table ? ' jse-selected' : ''),
       onClick: () => onChangeMode(Mode.table)
     }

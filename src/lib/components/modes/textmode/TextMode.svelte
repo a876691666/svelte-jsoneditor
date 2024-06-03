@@ -1033,18 +1033,18 @@
           )}.`}
         actions={[
           {
-            text: 'Open anyway',
-            title: 'Open the document in text mode. This may freeze or crash your browser.',
+            text: '仍然打开',
+            title: '以文本模式打开文档。这可能会导致你的浏览器冻结或崩溃。',
             onClick: handleAcceptTooLarge
           },
           {
-            text: 'Open in tree mode',
-            title: 'Open the document in tree mode. Tree mode can handle large documents.',
+            text: '在树状模式中打开',
+            title: '在树状模式中打开文档。树状模式可以处理大型文档。',
             onClick: handleSwitchToTreeMode
           },
           {
-            text: 'Cancel',
-            title: 'Cancel opening this large document.',
+            text: '取消',
+            title: '取消打开这个大型文档。',
             onClick: cancelLoadTooLarge
           }
         ]}
@@ -1079,14 +1079,14 @@
           actions={[
             {
               icon: faJSONEditorFormat,
-              text: 'Format',
-              title: 'Format JSON: add proper indentation and new lines (Ctrl+I)',
+              text: '格式化',
+              title: '格式化 JSON: 添加适当的缩进和新行 (Ctrl+I)',
               onClick: handleFormat
             },
             {
               icon: faTimes,
-              text: 'No thanks',
-              title: 'Close this message',
+              text: '不，谢谢',
+              title: '关闭此消息',
               onClick: () => (askToFormat = false)
             }
           ]}

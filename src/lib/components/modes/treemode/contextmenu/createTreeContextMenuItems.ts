@@ -78,10 +78,10 @@ export default function ({
   const rootSelected = selection ? isEmpty(getFocusPath(selection)) : false
   const focusValue = selection ? getIn(json, getFocusPath(selection)) : undefined
   const editValueText = Array.isArray(focusValue)
-    ? 'Edit array'
+    ? '编辑列表'
     : isObject(focusValue)
-      ? 'Edit object'
-      : 'Edit value'
+      ? '编辑对象'
+      : '编辑值'
 
   const hasSelectionContents =
     hasJson &&
@@ -110,7 +110,7 @@ export default function ({
     !rootSelected // must not be root
 
   const convertMode = hasSelectionContents
-  const insertOrConvertText = convertMode ? 'Convert to:' : 'Insert:'
+  const insertOrConvertText = convertMode ? '转换为:' : '插入:'
 
   const canInsertOrConvertStructure = readOnly || convertMode ? false : hasSelection
   const canInsertOrConvertObject =
@@ -148,8 +148,8 @@ export default function ({
           type: 'button',
           onClick: () => onEditKey(),
           icon: faPen,
-          text: 'Edit key',
-          title: 'Edit the key (Double-click on the key)',
+          text: '编辑键名',
+          title: '编辑键名（双击键名）',
           disabled: !canEditKey
         },
         {
@@ -159,7 +159,7 @@ export default function ({
             onClick: () => onEditValue(),
             icon: faPen,
             text: editValueText,
-            title: 'Edit the value (Double-click on the value)',
+            title: '编辑值（双击值）',
             disabled: !canEditValue
           },
           width: '11em',
@@ -168,15 +168,15 @@ export default function ({
               type: 'button',
               icon: faPen,
               text: editValueText,
-              title: 'Edit the value (Double-click on the value)',
+              title: '编辑值（双击值）',
               onClick: () => onEditValue(),
               disabled: !canEditValue
             },
             {
               type: 'button',
               icon: enforceString ? faCheckSquare : faSquare,
-              text: 'Enforce string',
-              title: 'Enforce keeping the value as string when it contains a numeric value',
+              text: '优先字符串',
+              title: '强制保持值为字符串，当值包含数字时',
               onClick: () => onToggleEnforceString(),
               disabled: !canEnforceString
             }
@@ -194,8 +194,8 @@ export default function ({
             type: 'button',
             onClick: () => onCut(true),
             icon: faCut,
-            text: 'Cut',
-            title: 'Cut selected contents, formatted with indentation (Ctrl+X)',
+            text: '剪切',
+            title: '剪切选中内容，带有缩进格式 (Ctrl+X)',
             disabled: !canCut
           },
           width: '10em',
@@ -203,16 +203,16 @@ export default function ({
             {
               type: 'button',
               icon: faCut,
-              text: 'Cut formatted',
-              title: 'Cut selected contents, formatted with indentation (Ctrl+X)',
+              text: '格式化剪切',
+              title: '剪切选中内容，带有缩进格式 (Ctrl+X)',
               onClick: () => onCut(true),
               disabled: !canCut
             },
             {
               type: 'button',
               icon: faCut,
-              text: 'Cut compacted',
-              title: 'Cut selected contents, without indentation (Ctrl+Shift+X)',
+              text: '紧凑剪切',
+              title: '剪切选中内容，不带缩进格式 (Ctrl+Shift+X)',
               onClick: () => onCut(false),
               disabled: !canCut
             }
@@ -224,8 +224,8 @@ export default function ({
             type: 'button',
             onClick: () => onCopy(true),
             icon: faCopy,
-            text: 'Copy',
-            title: 'Copy selected contents, formatted with indentation (Ctrl+C)',
+            text: '复制',
+            title: '复制选中内容，带有缩进格式 (Ctrl+C)',
             disabled: !canCopy
           },
           width: '12em',
@@ -233,16 +233,16 @@ export default function ({
             {
               type: 'button',
               icon: faCopy,
-              text: 'Copy formatted',
-              title: 'Copy selected contents, formatted with indentation (Ctrl+C)',
+              text: '格式化复制',
+              title: '复制选中内容，带有缩进格式 (Ctrl+C)',
               onClick: () => onCopy(true),
               disabled: !canCopy
             },
             {
               type: 'button',
               icon: faCopy,
-              text: 'Copy compacted',
-              title: 'Copy selected contents, without indentation (Ctrl+Shift+C)',
+              text: '紧凑复制',
+              title: '复制选中内容，不带缩进格式 (Ctrl+Shift+C)',
               onClick: () => onCopy(false),
               disabled: !canCopy
             }
@@ -252,8 +252,8 @@ export default function ({
           type: 'button',
           onClick: () => onPaste(),
           icon: faPaste,
-          text: 'Paste',
-          title: 'Paste clipboard contents (Ctrl+V)',
+          text: '粘贴',
+          title: '粘贴剪贴板内容 (Ctrl+V)',
           disabled: !canPaste
         }
       ]
@@ -269,40 +269,40 @@ export default function ({
               type: 'button',
               onClick: () => onDuplicate(),
               icon: faClone,
-              text: 'Duplicate',
-              title: 'Duplicate selected contents (Ctrl+D)',
+              text: '复制',
+              title: '复制选中内容',
               disabled: !canDuplicate
             },
             {
               type: 'button',
               onClick: () => onExtract(),
               icon: faCropAlt,
-              text: 'Extract',
-              title: 'Extract selected contents',
+              text: '提取',
+              title: '提取选中内容',
               disabled: !canExtract
             },
             {
               type: 'button',
               onClick: () => onSort(),
               icon: faSortAmountDownAlt,
-              text: 'Sort',
-              title: 'Sort array or object contents',
+              text: '排序',
+              title: '对数组或对象内容进行排序',
               disabled: readOnly || !hasSelectionContents
             },
             {
               type: 'button',
               onClick: () => onTransform(),
               icon: faFilter,
-              text: 'Transform',
-              title: 'Transform array or object contents (filter, sort, project)',
+              text: '转换',
+              title: '转换数组或对象内容（过滤、排序、投影）',
               disabled: readOnly || !hasSelectionContents
             },
             {
               type: 'button',
               onClick: () => onRemove(),
               icon: faTrashCan,
-              text: 'Remove',
-              title: 'Remove selected contents (Delete)',
+              text: '删除',
+              title: '删除选中内容',
               disabled: readOnly || !hasSelectionContents
             }
           ]
@@ -315,32 +315,32 @@ export default function ({
               type: 'button',
               onClick: () => handleInsertOrConvert('structure'),
               icon: convertMode ? faArrowRightArrowLeft : faPlus,
-              text: 'Structure',
-              title: insertOrConvertText + ' structure',
+              text: '结构',
+              title: insertOrConvertText + ' 结构',
               disabled: !canInsertOrConvertStructure
             },
             {
               type: 'button',
               onClick: () => handleInsertOrConvert('object'),
               icon: convertMode ? faArrowRightArrowLeft : faPlus,
-              text: 'Object',
-              title: insertOrConvertText + ' structure',
+              text: '对象',
+              title: insertOrConvertText + ' 结构',
               disabled: !canInsertOrConvertObject
             },
             {
               type: 'button',
               onClick: () => handleInsertOrConvert('array'),
               icon: convertMode ? faArrowRightArrowLeft : faPlus,
-              text: 'Array',
-              title: insertOrConvertText + ' array',
+              text: '列表',
+              title: insertOrConvertText + ' 列表',
               disabled: !canInsertOrConvertArray
             },
             {
               type: 'button',
               onClick: () => handleInsertOrConvert('value'),
               icon: convertMode ? faArrowRightArrowLeft : faPlus,
-              text: 'Value',
-              title: insertOrConvertText + ' value',
+              text: '值',
+              title: insertOrConvertText + ' 值',
               disabled: !canInsertOrConvertValue
             }
           ]
@@ -357,16 +357,16 @@ export default function ({
           type: 'button',
           onClick: () => onInsertBefore(),
           icon: faCaretSquareUp,
-          text: 'Insert before',
-          title: 'Select area before current entry to insert or paste contents',
+          text: '上方插入',
+          title: '在当前条目上方插入或粘贴内容',
           disabled: readOnly || !hasSelectionContents || rootSelected
         },
         {
           type: 'button',
           onClick: () => onInsertAfter(),
           icon: faCaretSquareDown,
-          text: 'Insert after',
-          title: 'Select area after current entry to insert or paste contents',
+          text: '下方插入',
+          title: '在当前条目下方插入或粘贴内容',
           disabled: readOnly || !hasSelectionContents || rootSelected
         }
       ]

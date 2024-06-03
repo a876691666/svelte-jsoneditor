@@ -19,7 +19,7 @@ const usedDependencies = usedDependencyNames.reduce((deps, name) => {
 
 const vanillaPackage = {
   ...pkg,
-  name: 'vanilla-jsoneditor',
+  name: 'chinese-vanilla-jsoneditor',
   scripts: {},
   dependencies: usedDependencies, // needed for the TypeScript types
   devDependencies: {},
@@ -30,7 +30,6 @@ const vanillaPackage = {
     '.': './index.js', // we don't create an object here, see https://github.com/josdejong/svelte-jsoneditor/issues/334
     './index.js.map': './index.js.map',
     './standalone.js': './standalone.js',
-    './standalone.js.map': './standalone.js.map',
     './standalone.d.ts': './standalone.d.ts'
   }
 }

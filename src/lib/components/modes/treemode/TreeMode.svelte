@@ -1749,7 +1749,7 @@
 
     const props = {
       tip: showTip
-        ? 'Tip: you can open this context menu via right-click or with Ctrl+Q'
+        ? '提示：你可以通过右键点击或使用 Ctrl+Q 打开这个上下文菜单'
         : undefined,
       items,
       onRequestClose: () => closeAbsolutePopup(popupId)

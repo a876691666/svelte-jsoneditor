@@ -20,7 +20,7 @@ export default {
     {
       file,
       format: 'es',
-      sourcemap: true,
+      sourcemap: false,
       inlineDynamicImports: true
     }
   ],

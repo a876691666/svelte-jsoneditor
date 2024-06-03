@@ -1,7 +1,7 @@
 {
   "name": "chinese-svelte-jsoneditor",
   "description": "A web-based tool to view, edit, format, transform, and validate JSON",
-  "version": "0.23.6",
+  "version": "0.23.8",
   "homepage": "https://github.com/a876691666/svelte-jsoneditor",
   "repository": {
     "type": "git",

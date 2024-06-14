@@ -553,6 +553,38 @@
   }): EditorView {
     debug('Create CodeMirror editor', { readOnly, indentation })
 
+    const chinesePhrases = {
+      'Control character': '控制字符',
+      'Selection deleted': '选择删除',
+      'Folded lines': '折叠行',
+      'Unfolded lines': '折叠行',
+      to: '向前',
+      'folded code': '折叠代码',
+      unfold: '展开代码',
+      'Fold line': '',
+      'Unfold line': '展开行',
+      'Go to line': '跳转到行',
+      go: '确定',
+      Find: '查找',
+      Replace: '替换',
+      next: '下一个',
+      previous: '上一个',
+      all: '所有',
+      'match case': '区分大小写',
+      regexp: '正则表达式',
+      'by word': '全字匹配',
+      replace: '替换',
+      'replace all': '全部替换',
+      close: '关闭',
+      'current match': '当前匹配',
+      'replaced $ matches': '$ Treffer ersetzt',
+      'replaced match on line $': 'Treffer on Zeile $ ersetzt',
+      'on line': 'auf Zeile',
+      Completions: '完成',
+      Diagnostics: '诊断',
+      'No diagnostics': '不诊断'
+    }
+
     const state = EditorState.create({
       doc: initialText,
       selection: isValidSelection(externalSelection, initialText)
@@ -608,6 +640,7 @@
         search({
           top: true
         }),
+        EditorState.phrases.of(chinesePhrases),
         EditorView.lineWrapping,
         readOnlyCompartment.of(EditorState.readOnly.of(readOnly)),
         tabSizeCompartment.of(EditorState.tabSize.of(tabSize)),
@@ -671,14 +704,7 @@
       severity: ValidationSeverity.error,
       message,
       actions:
-        isRepairable && !readOnly
-          ? [
-              {
-                name: 'Auto repair',
-                apply: () => handleRepair()
-              }
-            ]
-          : null
+        isRepairable && !readOnly ? [{ name: '自动修复', apply: () => handleRepair() }] : null
     }
   }
 
@@ -972,8 +998,8 @@
 
   const repairActionShowMe = {
     icon: faEye,
-    text: 'Show me',
-    title: 'Move to the parse error location',
+    text: '显示位置',
+    title: '移动到解析错误位置',
     onClick: handleShowMe
   }
 
@@ -982,8 +1008,8 @@
       ? [
           {
             icon: faWrench,
-            text: 'Auto repair',
-            title: 'Automatically repair JSON',
+            text: '自动修复',
+            title: '自动修复 JSON',
             onClick: handleRepair
           },
           repairActionShowMe
@@ -1023,14 +1049,8 @@
       <Message
         icon={faExclamationTriangle}
         type="error"
-        message={`The JSON document is larger than ${formatSize(
-          MAX_DOCUMENT_SIZE_TEXT_MODE,
-          1024
-        )}, ` +
-          `and may crash your browser when loading it in text mode. Actual size: ${formatSize(
-            text.length,
-            1024
-          )}.`}
+        message={`JSON文档的大小超过了 ${formatSize(MAX_DOCUMENT_SIZE_TEXT_MODE, 1024)}, ` +
+          `文本模式下加载可能会导致浏览器崩溃。实际大小：${formatSize(text.length, 1024)}.`}
         actions={[
           {
             text: '仍然打开',
@@ -1075,7 +1095,7 @@
       {#if !jsonParseError && askToFormat && needsFormatting(text)}
         <Message
           type="success"
-          message="Do you want to format the JSON?"
+          message="你想格式化 JSON 吗？"
           actions={[
             {
               icon: faJSONEditorFormat,

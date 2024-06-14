@@ -1,7 +1,6 @@
 <script lang="ts">
   import type {
     Content,
-    ContentErrors,
     ContextMenuItem,
     JSONEditorSelection,
     JSONParser,
@@ -14,7 +13,6 @@
     OnChangeMode,
     OnClassName,
     OnError,
-    OnExpand,
     OnFocus,
     OnJSONEditorModal,
     OnRenderContextMenu,
@@ -25,14 +23,11 @@
     OnSelect,
     OnSortModal,
     OnTransformModal,
-    TransformModalOptions,
     Validator
   } from '$lib/types'
   import { Mode } from '$lib/types.js'
   import TextMode from './textmode/TextMode.svelte'
-  import TableMode from './tablemode/TableMode.svelte'
-  import TreeMode from './treemode/TreeMode.svelte'
-  import type { JSONPatchDocument, JSONPath } from 'immutable-json-patch'
+  import type { JSONPatchDocument } from 'immutable-json-patch'
   import { isMenuSpace } from '$lib/typeguards.js'
   import { cloneDeep } from 'lodash-es'
 
@@ -71,37 +66,7 @@
   export let onTransformModal: OnTransformModal
   export let onJSONEditorModal: OnJSONEditorModal
 
-  let refTreeMode: TreeMode | undefined
-  let refTableMode: TableMode | undefined
   let refTextMode: TextMode | undefined
-
-  let modeMenuItems: MenuItem[]
-  $: modeMenuItems = [
-    {
-      type: 'button',
-      text: '文本编辑',
-      title: `切换到文本编辑模式 (当前模式: ${mode})`,
-      // check for 'code' mode is here for backward compatibility (deprecated since v0.4.0)
-      className:
-        'jse-group-button jse-first' +
-        (mode === Mode.text || (mode as string) === 'code' ? ' jse-selected' : ''),
-      onClick: () => onChangeMode(Mode.text)
-    },
-    {
-      type: 'button',
-      text: '结构编辑',
-      title: `切换到结构编辑模式 (当前模式: ${mode})`,
-      className: 'jse-group-button ' + (mode === Mode.tree ? ' jse-selected' : ''),
-      onClick: () => onChangeMode(Mode.tree)
-    },
-    {
-      type: 'button',
-      text: '表格编辑',
-      title: `切换到表格编辑模式 (当前模式: ${mode})`,
-      className: 'jse-group-button jse-last' + (mode === Mode.table ? ' jse-selected' : ''),
-      onClick: () => onChangeMode(Mode.table)
-    }
-  ]
 
   const separatorMenuItem: MenuSeparator = {
     type: 'separator'
@@ -109,9 +74,7 @@
 
   let handleRenderMenu: OnRenderMenuInternal
   $: handleRenderMenu = (items: MenuItem[]) => {
-    const updatedItems = isMenuSpace(items[0])
-      ? modeMenuItems.concat(items) // menu is empty, readOnly mode
-      : modeMenuItems.concat(separatorMenuItem, items)
+    const updatedItems = isMenuSpace(items[0]) ? items : items.concat(separatorMenuItem)
 
     const updatedItemsOriginal = cloneDeep(updatedItems) // the user may change updatedItems in the callback
 
@@ -131,62 +94,11 @@
   }
 
   export function patch(operations: JSONPatchDocument): JSONPatchResult {
-    if (refTreeMode) {
-      // Note that tree mode has an optional afterPatch callback.
-      // right now we don's support this in the public API.
-      return refTreeMode.patch(operations)
-    }
-
-    if (refTableMode) {
-      // Note that tree mode has an optional afterPatch callback.
-      // right now we don's support this in the public API.
-      return refTableMode.patch(operations)
-    }
-
     if (refTextMode) {
       return refTextMode.patch(operations)
     }
 
     throw new Error(`Method patch is not available in mode "${mode}"`)
-  }
-
-  export function expand(callback?: OnExpand): void {
-    if (refTreeMode) {
-      return refTreeMode.expand(callback)
-    } else {
-      throw new Error(`Method expand is not available in mode "${mode}"`)
-    }
-  }
-
-  /**
-   * Open the transform modal
-   */
-  export function transform(options: TransformModalOptions): void {
-    if (refTextMode) {
-      refTextMode.openTransformModal(options)
-    } else if (refTreeMode) {
-      refTreeMode.openTransformModal(options)
-    } else if (refTableMode) {
-      refTableMode.openTransformModal(options)
-    } else {
-      throw new Error(`Method transform is not available in mode "${mode}"`)
-    }
-  }
-
-  /**
-   * Validate the contents of the editor using the configured validator.
-   * Returns a parse error or a list with validation warnings
-   */
-  export function validate(): ContentErrors | null {
-    if (refTextMode) {
-      return refTextMode.validate()
-    } else if (refTreeMode) {
-      return refTreeMode.validate()
-    } else if (refTableMode) {
-      return refTableMode.validate()
-    } else {
-      throw new Error(`Method validate is not available in mode "${mode}"`)
-    }
   }
 
   /**
@@ -201,42 +113,7 @@
    * will happen, and the contents will be returned as is.
    */
   export function acceptAutoRepair(): Content {
-    if (refTreeMode) {
-      return refTreeMode.acceptAutoRepair()
-    } else {
-      return content
-    }
-  }
-
-  export function scrollTo(path: JSONPath): Promise<void> {
-    if (refTreeMode) {
-      return refTreeMode.scrollTo(path)
-    } else if (refTableMode) {
-      return refTableMode.scrollTo(path)
-    } else {
-      // TODO: implement scrollTo for text mode
-      throw new Error(`Method scrollTo is not available in mode "${mode}"`)
-    }
-  }
-
-  export function findElement(path: JSONPath): Element | null {
-    if (refTreeMode) {
-      return refTreeMode.findElement(path)
-    } else if (refTableMode) {
-      return refTableMode.findElement(path)
-    } else {
-      throw new Error(`Method findElement is not available in mode "${mode}"`)
-    }
-  }
-
-  export function focus() {
-    if (refTextMode) {
-      refTextMode.focus()
-    } else if (refTreeMode) {
-      refTreeMode.focus()
-    } else if (refTableMode) {
-      refTableMode.focus()
-    }
+    return content
   }
 
   export async function refresh(): Promise<void> {
@@ -249,87 +126,27 @@
   }
 </script>
 
-{#if mode === Mode.text || String(mode) === 'code'}
-  <TextMode
-    bind:this={refTextMode}
-    externalContent={content}
-    externalSelection={selection}
-    {readOnly}
-    {indentation}
-    {tabSize}
-    {mainMenuBar}
-    {statusBar}
-    {askToFormat}
-    {escapeUnicodeCharacters}
-    {parser}
-    {validator}
-    {validationParser}
-    {onChange}
-    {onSelect}
-    {onChangeMode}
-    {onError}
-    {onFocus}
-    {onBlur}
-    onRenderMenu={handleRenderMenu}
-    {onSortModal}
-    {onTransformModal}
-  />
-{:else if mode === Mode.table}
-  <TableMode
-    bind:this={refTableMode}
-    externalContent={content}
-    externalSelection={selection}
-    {readOnly}
-    {mainMenuBar}
-    {escapeControlCharacters}
-    {escapeUnicodeCharacters}
-    {flattenColumns}
-    {parser}
-    {parseMemoizeOne}
-    {validator}
-    {validationParser}
-    {indentation}
-    {onChange}
-    {onChangeMode}
-    {onSelect}
-    {onRenderValue}
-    {onFocus}
-    {onBlur}
-    onRenderMenu={handleRenderMenu}
-    onRenderContextMenu={handleRenderContextMenu}
-    {onSortModal}
-    {onTransformModal}
-    {onJSONEditorModal}
-  />
-{:else}
-  <!-- mode === Mode.tree -->
-  <TreeMode
-    bind:this={refTreeMode}
-    externalContent={content}
-    externalSelection={selection}
-    {readOnly}
-    {indentation}
-    {mainMenuBar}
-    {navigationBar}
-    {escapeControlCharacters}
-    {escapeUnicodeCharacters}
-    {parser}
-    {parseMemoizeOne}
-    {validator}
-    {validationParser}
-    {pathParser}
-    {onError}
-    {onChange}
-    {onChangeMode}
-    {onSelect}
-    {onRenderValue}
-    {onClassName}
-    {onFocus}
-    {onBlur}
-    onRenderMenu={handleRenderMenu}
-    onRenderContextMenu={handleRenderContextMenu}
-    {onSortModal}
-    {onTransformModal}
-    {onJSONEditorModal}
-  />
-{/if}
+<TextMode
+  bind:this={refTextMode}
+  externalContent={content}
+  externalSelection={selection}
+  {readOnly}
+  {indentation}
+  {tabSize}
+  {mainMenuBar}
+  {statusBar}
+  {askToFormat}
+  {escapeUnicodeCharacters}
+  {parser}
+  {validator}
+  {validationParser}
+  {onChange}
+  {onSelect}
+  {onChangeMode}
+  {onError}
+  {onFocus}
+  {onBlur}
+  onRenderMenu={handleRenderMenu}
+  {onSortModal}
+  {onTransformModal}
+/>

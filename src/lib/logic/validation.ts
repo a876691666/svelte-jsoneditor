@@ -89,7 +89,7 @@ export function validateText(
   if (text.length > MAX_VALIDATABLE_SIZE) {
     const validationError: ValidationError = {
       path: [],
-      message: 'Validation turned off: the document is too large',
+      message: '验证已关闭：文档太大',
       severity: ValidationSeverity.info
     }
 
@@ -141,6 +141,8 @@ export function validateText(
       text,
       (err as Error).message || (err as Error).toString()
     )
+
+    parseError.message = `JSON格式错误: ${parseError.line}行 ${parseError.column}列`
 
     return {
       parseError,

@@ -98,7 +98,7 @@
     {
       type: 'button',
       icon: faTimes,
-      title: 'Cancel repair',
+      title: '取消修复',
       className: 'jse-cancel',
       onClick: onCancel
     }
@@ -106,14 +106,14 @@
 
   $: gotoAction = {
     icon: faArrowDown,
-    text: 'Show me',
-    title: 'Scroll to the error location',
+    text: '显示位置',
+    title: '移动到解析错误位置',
     onClick: goToError
   }
 
   $: repairAction = {
     icon: faWrench,
-    text: 'Auto repair',
+    text: '自动修复',
     title: 'Automatically repair JSON',
     onClick: handleRepair
   }
@@ -123,8 +123,8 @@
   $: successActions = [
     {
       icon: faCheck,
-      text: 'Apply',
-      title: 'Apply fixed JSON',
+      text: '应用',
+      title: '应用修复后的 JSON',
       disabled: readOnly,
       onClick: handleApply
     }
@@ -133,22 +133,18 @@
 
 <div class="jse-json-repair-component">
   <Menu {items}>
-    <div slot="left" class="jse-info">Repair invalid JSON, then click apply</div>
+    <div slot="left" class="jse-info">修复无效的 JSON, 然后点击应用</div>
   </Menu>
 
   {#if error}
     <Message
       type="error"
       icon={faExclamationTriangle}
-      message={`Cannot parse JSON: ${error.message}`}
+      message={`无法解析 JSON: ${error.message}`}
       actions={errorActions}
     />
   {:else}
-    <Message
-      type="success"
-      message="JSON is valid now and can be parsed."
-      actions={successActions}
-    />
+    <Message type="success" message="JSON 现在有效，可以解析。" actions={successActions} />
   {/if}
   <textarea
     bind:this={domTextArea}

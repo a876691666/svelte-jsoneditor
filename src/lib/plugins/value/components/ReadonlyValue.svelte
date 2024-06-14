@@ -3,7 +3,6 @@
 <script lang="ts">
   import { isUrl } from '$lib/utils/typeUtils.js'
   import { createValueSelection } from '$lib/logic/selection.js'
-  import SearchResultHighlighter from '../../../components/modes/treemode/highlight/SearchResultHighlighter.svelte'
   import { getValueClass } from './utils/getValueClass.js'
   import { addNewLineSuffix } from '$lib/utils/domUtils.js'
   import type {
@@ -50,11 +49,9 @@
   class={getValueClass(value, parser)}
   on:click={handleValueClick}
   on:dblclick={handleValueDoubleClick}
-  title={valueIsUrl ? 'Ctrl+Click or Ctrl+Enter to open url in new window' : null}
+  title={valueIsUrl ? 'Ctrl+点击或Ctrl+回车以在新窗口中打开URL' : null}
 >
-  {#if searchResultItems}
-    <SearchResultHighlighter text={normalization.escapeValue(value)} {searchResultItems} />
-  {:else}
+  {#if !searchResultItems}
     {addNewLineSuffix(normalization.escapeValue(value))}
   {/if}
 </div>

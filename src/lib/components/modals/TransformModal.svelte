@@ -15,7 +15,6 @@
   import TransformModalHeader from './TransformModalHeader.svelte'
   import AbsolutePopup from './popup/AbsolutePopup.svelte'
   import { createDebug } from '$lib/utils/debug.js'
-  import TreeMode from '../modes/treemode/TreeMode.svelte'
   import type {
     Content,
     JSONParser,
@@ -283,71 +282,12 @@
                 </button>
               </div>
             </div>
-            {#if showOriginal}
-              <TreeMode
-                externalContent={selectedContent}
-                externalSelection={null}
-                readOnly={true}
-                mainMenuBar={false}
-                navigationBar={false}
-                {indentation}
-                {escapeControlCharacters}
-                {escapeUnicodeCharacters}
-                {parser}
-                {parseMemoizeOne}
-                {onRenderValue}
-                {onRenderMenu}
-                {onRenderContextMenu}
-                onError={console.error}
-                onChange={noop}
-                onChangeMode={noop}
-                onSelect={noop}
-                onFocus={noop}
-                onBlur={noop}
-                onSortModal={noop}
-                onTransformModal={noop}
-                onJSONEditorModal={noop}
-                {onClassName}
-                validator={null}
-                {validationParser}
-                {pathParser}
-              />
-            {/if}
           </div>
           <div class="jse-preview-data">
             <div class="jse-label">
               <div class="jse-label-inner">Preview</div>
             </div>
-            {#if !previewError}
-              <TreeMode
-                externalContent={previewContent}
-                externalSelection={null}
-                readOnly={true}
-                mainMenuBar={false}
-                navigationBar={false}
-                {indentation}
-                {escapeControlCharacters}
-                {escapeUnicodeCharacters}
-                {parser}
-                {parseMemoizeOne}
-                {onRenderValue}
-                {onRenderMenu}
-                {onRenderContextMenu}
-                onError={console.error}
-                onChange={noop}
-                onChangeMode={noop}
-                onSelect={noop}
-                onFocus={noop}
-                onBlur={noop}
-                onSortModal={noop}
-                onTransformModal={noop}
-                onJSONEditorModal={noop}
-                {onClassName}
-                validator={null}
-                {validationParser}
-                {pathParser}
-              />
-            {:else}
+            {#if previewError}
               <div class="jse-preview jse-error">
                 {previewError}
               </div>
